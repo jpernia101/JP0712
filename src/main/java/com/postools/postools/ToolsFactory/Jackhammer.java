@@ -10,14 +10,6 @@ public class Jackhammer implements Tool{
     Boolean holidayExemption;
     Boolean weekendExemption;
 
-    // Jackhammer(String c, String b , Double p , Boolean h , Boolean w){
-    //     this.toolCode = c;
-    //     this.toolBrand = b;
-    //     this.toolPrice = p;
-    //     this.holidayExemption = h;
-    //     this.weekendExemption = w;
-    // }
-    
     Jackhammer(String code){
         this.toolPrice = ToolsConstants.JACKHAMMER_PRICE;
         this.holidayExemption = ToolsConstants.JACKHAMMER_HOLIDAY_EXEMPT;

@@ -1,36 +1,35 @@
 package com.postools.postools;
 
 import java.text.ParseException;
-
 import javax.naming.directory.InvalidAttributeValueException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.postools.postools.ToolsFactory.ToolFactory;
-import com.postools.postools.ToolsFactory.Tool;
 
 @SpringBootApplication
 public class PostoolsApplication {
 
 	public static void main(String[] args) throws ParseException, InvalidAttributeValueException {
 		System.out.println("TESTING");
-		
+		String[] toolCodes = {"JAKR","LADW", "CHNS", "JAKD" , "JAKR", "JAKR"};
+		String[] checkoutDates = {"09/03/15","07/02/20","07/02/15","09/03/15","07/02/15","07/02/20"};
+		Integer[] numofDays = {5,3,5,6,9,4 };
+		Integer[] discount = {101,10,25,0,0,50 };
 
-		Tool jackHammer2 = ToolFactory.createTool("JAKR");
-		Tool jackHammer3 = ToolFactory.createTool("JAKR");
-		// CheckoutItem cart = new CheckoutItem(jackHammer2, "09/03/15",5, 101);
-		CheckoutItem cart2 = new CheckoutItem("JAKR", "07/02/15",9, 0);
-		CheckoutItem cart3 = new CheckoutItem("JAKR", "07/02/20",4, 50);
-		
-		// System.out.println(jackHammer2.toString()); 
-		// System.out.println(cart.getTotal()); 
-		// cart.printRentalAgreement();
-		cart2.printRentalAgreement();
-		cart3.printRentalAgreement();
-	
-		
-		
+		for (int i = 0; i < discount.length; i++) {
+			try {
+				CheckoutItem item = new CheckoutItem(toolCodes[i],checkoutDates[i],numofDays[i],discount[i]);
+				System.out.println(" \n Agreement for tool # " + (i +1) + "\n");
+				item.printRentalAgreement();
+				
+			} catch (InvalidAttributeValueException e) {
+				System.out.println( "\n Agreement for tool " + (i + 1) + " failed due to exception: " + e + "\n");
+			}
+			catch (Exception e) {
+				System.out.println(e);
+			}
+			
+		}
+				
 		SpringApplication.run(PostoolsApplication.class, args);
 	}
 

@@ -1,25 +1,23 @@
 package com.postools.postools;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.naming.directory.InvalidAttributeValueException;
-
 import com.postools.postools.ToolsFactory.Tool;
 import com.postools.postools.ToolsFactory.ToolFactory;
-
 import lombok.Data;
 
 @Data
 public class CheckoutItem {
-    Tool tool;
-    String total;
-    DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    String checkoutDate;
-    Integer numOfDaysTotal;
-    Integer numOfDaysCharged;
-    Integer discount; 
+    private Tool tool;
+    private String total;
+    private DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    private String checkoutDate;
+    private Integer numOfDaysTotal;
+    private Integer numOfDaysCharged;
+    private Integer discount; 
 
     
     CheckoutItem(String code, String checkoutDate, Integer numOfDays, Integer discount) throws InvalidAttributeValueException{
@@ -49,7 +47,7 @@ public class CheckoutItem {
     }
 
     private String getTotal(Integer numberOfDays , Integer discount){
-        Double amountOff = (discount * tool.getToolPrice()) / 100 ;
+        Double amountOff = (discount * tool.getToolPrice()) / 100.00 ;
         Double newPrice = (tool.getToolPrice() - amountOff) * numberOfDays;
         this.total = decimalFormat.format(newPrice);
 
@@ -66,22 +64,26 @@ public class CheckoutItem {
         return decimalFormat.format(amountSaved);
     }
 
-    private Integer numberOfDaysCharged(String startDate, Integer numOfDays) {
+    public Integer numberOfDaysCharged(String startDate, Integer numOfDays) {
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
         LocalDate date = LocalDate.parse(startDate,formatter);
+        //list of dates where holidays are observed
+        ArrayList<LocalDate> observedHolidayDates = Helpers.getObservedDatesOfHoliday(date.getYear());
 
         //from day after checkout is when we start counting
         date = date.plusDays(1);
-
         Integer skippedDays = 0 ;
+
         for(int i = 1 ; i <= numOfDays ; i++){
-            if(Helpers.isDateWeekend(date)){
+            if(Helpers.isDateWeekend(date) && this.tool.getWeekendExemption()){
                 skippedDays++;
                 
             }
-            if(Helpers.isDateHoliday(date)){
-                skippedDays++;
-                
+            if( observedHolidayDates.contains(date) && this.tool.getHolidayExemption()){
+                //we remove it cause we already counted for it
+                observedHolidayDates.remove(date);
+                skippedDays++; 
             }
             date = date.plusDays(1);
                  
