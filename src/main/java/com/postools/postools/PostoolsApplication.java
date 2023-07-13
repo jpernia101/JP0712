@@ -27,7 +27,7 @@ public class PostoolsApplication {
 		for (int i = 0; i < discount.length; i++) {
 			try {
 				CheckoutItem item = new CheckoutItem(toolCodes[i],checkoutDates[i],numofDays[i],discount[i]);
-				System.out.println(" \n Agreement for tool # " + (i +1) + "\n");
+				log.info(" \n Agreement for tool # " + (i +1) + "\n");
 				item.printRentalAgreement();
 				
 			} catch (InvalidAttributeValueException e) {
