@@ -1,4 +1,4 @@
-package com.postools.postools;
+package com.postools.postools.Model;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import javax.naming.directory.InvalidAttributeValueException;
 import com.postools.postools.ToolsFactory.Tool;
 import com.postools.postools.ToolsFactory.ToolFactory;
+import com.postools.postools.Util.DateUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
 
 @Data
+@Slf4j
 public class CheckoutItem {
     private Tool tool;
     private String total;
@@ -20,7 +24,7 @@ public class CheckoutItem {
     private Integer discount; 
 
     
-    CheckoutItem(String code, String checkoutDate, Integer numOfDays, Integer discount) throws InvalidAttributeValueException{
+    public CheckoutItem(String code, String checkoutDate, Integer numOfDays, Integer discount) throws InvalidAttributeValueException{
         this.tool = ToolFactory.createTool(code);
         this.checkoutDate = checkoutDate;
         this.numOfDaysTotal = numOfDays;
@@ -69,14 +73,14 @@ public class CheckoutItem {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
         LocalDate date = LocalDate.parse(startDate,formatter);
         //list of dates where holidays are observed
-        ArrayList<LocalDate> observedHolidayDates = Helpers.getObservedDatesOfHoliday(date.getYear());
+        ArrayList<LocalDate> observedHolidayDates = DateUtil.getObservedDatesOfHoliday(date.getYear());
 
         //from day after checkout is when we start counting
         date = date.plusDays(1);
         Integer skippedDays = 0 ;
 
         for(int i = 1 ; i <= numOfDays ; i++){
-            if(Helpers.isDateWeekend(date) && this.tool.getWeekendExemption()){
+            if(DateUtil.isDateWeekend(date) && this.tool.getWeekendExemption()){
                 skippedDays++;
                 
             }
@@ -100,7 +104,7 @@ public class CheckoutItem {
     }
 
     public void printRentalAgreement(){
-        System.out.println("Rental Agreement: "+ "\n" + "Tool Code: " + tool.getToolCode() + "\n" + "Tool Type : " + tool.getToolType() + "\n" 
+        log.info("Rental Agreement: "+ "\n" + "Tool Code: " + tool.getToolCode() + "\n" + "Tool Type : " + tool.getToolType() + "\n" 
         + "Tool Brand: " + tool.getToolBrand() + "\n" + "Rental Days : " + this.numOfDaysTotal + "\n" + "Checkout Date: " + this.checkoutDate + "\n"
         + "Due Date: " + dueDate() + "\n" + "Daily Rental Charge: $" + tool.getToolPrice() + "\n" + "Charged Days: " + this.numOfDaysCharged + "\n"
         + "Discount Percent: " + this.discount + "% \n" + "Discount Amount: $" + amountSaved() + "\n" + "Final Charge: $" + this.getTotal() + "\n"

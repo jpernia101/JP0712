@@ -1,10 +1,10 @@
-package com.postools.postools;
+package com.postools.postools.Util;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Helpers {
+public class DateUtil {
 
     public static Boolean isDateWeekend(LocalDate date){
         DayOfWeek dayOfWeek = date.getDayOfWeek();

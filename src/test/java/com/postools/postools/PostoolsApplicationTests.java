@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import javax.naming.directory.InvalidAttributeValueException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.postools.postools.Model.CheckoutItem;
 import com.postools.postools.ToolsFactory.Tool;
 import com.postools.postools.ToolsFactory.ToolFactory;
+import com.postools.postools.Util.DateUtil;
 
 @SpringBootTest
 class PostoolsApplicationTests {
@@ -52,10 +55,10 @@ class PostoolsApplicationTests {
 	@Test
 	void testIsDateWeekend() {
 		LocalDate isWeekend = LocalDate.of(2023, 7, 9);
-		assertTrue(Helpers.isDateWeekend(isWeekend));
+		assertTrue(DateUtil.isDateWeekend(isWeekend));
 
 		LocalDate isNotWeekend = LocalDate.of(2023, 7, 10);
-		assertFalse(Helpers.isDateWeekend(isNotWeekend));
+		assertFalse(DateUtil.isDateWeekend(isNotWeekend));
 	}
 
 	@Test
@@ -64,7 +67,7 @@ class PostoolsApplicationTests {
 		//[ "2020/07/03", "2020/09/07" ]
 		observedDates.add(LocalDate.of(2020, 7, 3));
 		observedDates.add(LocalDate.of(2020, 9, 7));
-		assertEquals(observedDates,Helpers.getObservedDatesOfHoliday(2020));
+		assertEquals(observedDates,DateUtil.getObservedDatesOfHoliday(2020));
 	}
 
 	@Test
